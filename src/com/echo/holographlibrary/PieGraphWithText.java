@@ -29,13 +29,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Path.Direction;
 import android.graphics.RectF;
 import android.graphics.Region;
-import android.util.AttributeSet;
+import android.graphics.Typeface;
 import android.view.View;
 
-public class PieGraph extends View
+public class PieGraphWithText extends View
 {
 
 	private ArrayList< PieSlice > slices = new ArrayList< PieSlice >();
@@ -46,14 +45,97 @@ public class PieGraph extends View
 	private int thickness = 50;
 	private OnSliceClickedListener listener;
 
-	public PieGraph ( Context context )
+	private int valueUsed;
+	private int valueLimit;
+	private String text;
+	private String color;
+	private String colorOverrun;
+	private boolean unlimited;
+
+	public PieGraphWithText ( Context context, int valueUsed, int valueLimit, String text, String color, String colorOverrun, boolean unlimited )
 	{
 		super( context );
+		this.valueUsed = valueUsed;
+		this.valueLimit = valueLimit;
+		this.text = text;
+		this.color = color;
+		this.colorOverrun = colorOverrun;
+		this.unlimited = unlimited;
+		init();
 	}
 
-	public PieGraph ( Context context, AttributeSet attrs )
+	private void init ()
 	{
-		super( context, attrs );
+		if ( valueUsed == valueLimit || unlimited )
+		{
+			PieSlice slice = new PieSlice();
+			slice.setColor( Color.parseColor( color ) );
+			slice.setValue( valueUsed );
+			addSlice( slice );
+			addSlice( slice );
+		}
+		else if ( valueUsed < valueLimit )
+		{
+			PieSlice slice = new PieSlice();
+			slice.setColor( Color.parseColor( color ) );
+			slice.setValue( valueUsed );
+			addSlice( slice );
+
+			slice = new PieSlice();
+			slice.setColor( Color.parseColor( "#d8d8d8" ) );
+			slice.setValue( valueLimit - valueUsed );
+			addSlice( slice );
+		}
+		else if ( valueUsed >= 2 * valueLimit )
+		{
+			PieSlice slice = new PieSlice();
+			slice.setColor( Color.parseColor( colorOverrun ) );
+			slice.setValue( valueUsed );
+			addSlice( slice );
+			addSlice( slice );
+		}
+		else if ( valueUsed > valueLimit )
+		{
+			PieSlice slice = new PieSlice();
+			slice.setColor( Color.parseColor( colorOverrun ) );
+			slice.setValue( valueUsed - valueLimit );
+			addSlice( slice );
+
+			slice = new PieSlice();
+			slice.setColor( Color.parseColor( color ) );
+			slice.setValue( valueLimit - ( valueUsed - valueLimit ) );
+			addSlice( slice );
+		}
+	}
+
+	private void drawText ( Canvas canvas )
+	{
+		//		paint.setColor( Color.parseColor( "#33B5E5" ) );
+		//		canvas.drawText( text, 0, 0, paint );
+		String usedLimit = unlimited ? getContext().getResources().getString( R.string.choose_pricing_unlimited ) : valueUsed + "/" + valueLimit;
+		String percentage = String.format( "%.0f%%", Math.floor( ( ( float ) valueUsed / ( float ) valueLimit ) * 100 ) );
+		float textSizeMain = 50f;
+		int marginPx = 5;
+
+		Paint paint = new Paint();
+		paint.setColor( Color.parseColor( color ) );
+		paint.setTextSkewX( -0.2f );
+		paint.setTextSize( textSizeMain );
+		paint.setTypeface( Typeface.DEFAULT_BOLD );
+
+		float textWidth = paint.measureText( usedLimit );
+
+		canvas.drawText( usedLimit, getWidth() / 2 - textWidth / 2, getHeight() / 2 + textSizeMain / 8, paint );
+
+		if ( !unlimited )
+		{
+			paint.setTextSize( textSizeMain * 0.7f );
+			paint.setTypeface( Typeface.DEFAULT );
+
+			canvas.drawText( percentage, getWidth() / 2 - paint.measureText( percentage ) - marginPx, getHeight() / 2 + textSizeMain, paint );
+
+			canvas.drawText( text, getWidth() / 2 + marginPx, getHeight() / 2 + textSizeMain, paint );
+		}
 	}
 
 	public void onDraw ( Canvas canvas )
@@ -103,35 +185,37 @@ public class PieGraph extends View
 					( int ) ( midY + radius ) ) );
 			canvas.drawPath( p, paint );
 
-			if ( indexSelected == count && listener != null )
-			{
-				path.reset();
-				paint.setColor( slice.getColor() );
-				paint.setColor( Color.parseColor( "#33B5E5" ) );
-				paint.setAlpha( 100 );
-
-				if ( slices.size() > 1 )
-				{
-					path.arcTo( new RectF( midX - radius - ( padding * 2 ), midY - radius - ( padding * 2 ), midX + radius + ( padding * 2 ),
-							midY + radius + ( padding * 2 ) ), currentAngle, currentSweep + padding );
-					path.arcTo( new RectF( midX - innerRadius + ( padding * 2 ), midY - innerRadius + ( padding * 2 ), midX + innerRadius
-							- ( padding * 2 ), midY + innerRadius - ( padding * 2 ) ), currentAngle + currentSweep + padding,
-							-( currentSweep + padding ) );
-					path.close();
-				}
-				else
-				{
-					path.addCircle( midX, midY, radius + padding, Direction.CW );
-				}
-
-				canvas.drawPath( path, paint );
-				paint.setAlpha( 255 );
-			}
+			//			if ( indexSelected == count && listener != null )
+			//			{
+			//				path.reset();
+			//				paint.setColor( slice.getColor() );
+			//				paint.setColor( Color.parseColor( "#33B5E5" ) );
+			//				paint.setAlpha( 100 );
+			//
+			//				if ( slices.size() > 1 )
+			//				{
+			//					path.arcTo( new RectF( midX - radius - ( padding * 2 ), midY - radius - ( padding * 2 ), midX + radius + ( padding * 2 ),
+			//							midY + radius + ( padding * 2 ) ), currentAngle, currentSweep + padding );
+			//					path.arcTo( new RectF( midX - innerRadius + ( padding * 2 ), midY - innerRadius + ( padding * 2 ), midX + innerRadius
+			//							- ( padding * 2 ), midY + innerRadius - ( padding * 2 ) ), currentAngle + currentSweep + padding,
+			//							-( currentSweep + padding ) );
+			//					path.close();
+			//				}
+			//				else
+			//				{
+			//					path.addCircle( midX, midY, radius + padding, Direction.CW );
+			//				}
+			//
+			//				canvas.drawPath( path, paint );
+			//				paint.setAlpha( 255 );
+			//			}
 
 			currentAngle = currentAngle + currentSweep;
 
 			count++;
 		}
+
+		drawText( canvas );
 
 	}
 
