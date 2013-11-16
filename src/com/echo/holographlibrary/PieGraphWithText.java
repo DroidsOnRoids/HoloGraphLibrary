@@ -70,10 +70,21 @@ public class PieGraphWithText extends View
 		{
 			PieSlice slice = new PieSlice();
 			slice.setColor( Color.parseColor( color ) );
-			slice.setValue( valueUsed );
+			slice.setValue( 1 );
 			addSlice( slice );
 			addSlice( slice );
 		}
+		else if ( valueUsed ==0 )
+		{
+			PieSlice slice = new PieSlice();
+			slice.setColor( Color.parseColor( "#d8d8d8" ) );
+			slice.setValue( 1 ); //fake full circle
+			addSlice( slice );
+			slice = new PieSlice();
+			slice.setColor( Color.parseColor( "#d8d8d8" ) );
+			slice.setValue( 1 );
+			addSlice( slice );			
+		}		
 		else if ( valueUsed < valueLimit )
 		{
 			PieSlice slice = new PieSlice();
