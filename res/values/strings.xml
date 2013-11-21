@@ -2,5 +2,14 @@
 
     <string name="app_name">HoloGraphLibrary</string>
     <string name="choose_pricing_unlimited"/>
+    <string name="chart_data_remaining"/>
+    <string name="chart_data_remaining_mb"/>
+    <string name="chart_unlimited_usage"/>
+    <string name="chart_unlimited_usage_voice"/>
+    <string name="tab_voice"/>
+    <string name="tab_data"/>
+    <string name="chart_limit_over"/>    
+    <string name="chart_limit_over_data"/>
+    <string name="chart_limit_over_voice"/>
 
 </resources>

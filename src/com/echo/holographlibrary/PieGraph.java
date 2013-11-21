@@ -46,6 +46,14 @@ public class PieGraph extends View
 	private int thickness = 50;
 	private OnSliceClickedListener listener;
 
+	protected int valueUsed;
+	protected int valueLimit;
+	protected String color;
+	protected String colorOverrun;
+	protected final int colorUsed = Color.parseColor( "#d8d8d8" );
+	protected final int colorOverused = Color.parseColor( "#b4b4b4" );
+	protected boolean unlimited;
+
 	public PieGraph ( Context context )
 	{
 		super( context );
@@ -132,7 +140,90 @@ public class PieGraph extends View
 
 			count++;
 		}
+	}
 
+	public void initChart ( int thickness, int valueUsed, int valueLimit, String color, String colorOverrun, boolean unlimited )
+	{
+		this.thickness = thickness;
+		this.valueUsed = valueUsed;
+		this.valueLimit = valueLimit;
+		this.color = color;
+		this.colorOverrun = colorOverrun;
+		this.unlimited = unlimited;
+
+		setThickness( thickness );
+		PieSlice slice;
+
+		boolean diff = false;
+
+		if ( valueUsed == valueLimit || valueUsed == 0 || valueUsed > 2 * valueLimit )
+		{
+			diff = true;
+		}
+
+		if ( unlimited && valueLimit >= 44640 )
+		{
+			slice = new PieSlice();
+			slice.setColor( Color.parseColor( color ) );
+			slice.setValue( 1 );
+			addSlice( slice );
+			addSlice( slice );
+		}
+		else if ( unlimited && valueLimit < 44640 || valueUsed < valueLimit )
+		{
+			slice = new PieSlice();
+			slice.setColor( Color.parseColor( color ) );
+			slice.setValue( valueLimit - valueUsed );
+			addSlice( slice );
+			if ( diff )
+			{
+				addSlice( slice );
+			}
+
+			slice = new PieSlice();
+			slice.setColor( colorUsed );
+			slice.setValue( valueUsed );
+			addSlice( slice );
+		}
+		else if ( valueLimit == 0 )
+		{
+			slice = new PieSlice();
+			slice.setColor( colorUsed );
+
+			if ( diff )
+			{
+				slice.setValue( 1 );
+				addSlice( slice );
+				addSlice( slice );
+			}
+			else
+			{
+				slice.setValue( valueUsed );
+				addSlice( slice );
+				addSlice( slice );
+			}
+		}
+		else if ( valueUsed > valueLimit )
+		{
+			slice = new PieSlice();
+			if ( diff )
+			{
+				slice.setColor( colorOverused );
+				slice.setValue( valueUsed - valueLimit );
+			}
+			else
+			{
+				slice.setColor( colorUsed );
+				slice.setValue( valueLimit - ( valueUsed - valueLimit ) );
+			}
+			addSlice( slice );
+
+			slice = new PieSlice();
+			slice.setColor( colorOverused );
+			slice.setValue( valueUsed - valueLimit );
+			addSlice( slice );
+		}
+		invalidate();
 	}
 
 	//	@Override
