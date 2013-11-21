@@ -50,7 +50,8 @@ public class PieGraphWithText extends View
 	private String text;
 	private String color;
 	private String colorOverrun;
-	private int colorNotUsed = Color.parseColor( "#d8d8d8" );
+	private final int colorUsed = Color.parseColor( "#d8d8d8" );
+	private final int colorOverused = Color.parseColor( "#b4b4b4" );
 	private boolean unlimited;
 
 	public PieGraphWithText ( Context context, int valueUsed, int valueLimit, String text, String color, String colorOverrun, boolean unlimited )
@@ -69,19 +70,14 @@ public class PieGraphWithText extends View
 	{
 		PieSlice slice;
 
-		if ( unlimited && valueLimit != 99999 && valueUsed != 0 )
-		{
-			slice = new PieSlice();
-			slice.setColor( Color.parseColor( color ) );
-			slice.setValue( valueLimit - valueUsed );
-			addSlice( slice );
+		boolean diff = false;
 
-			slice = new PieSlice();
-			slice.setColor( colorNotUsed );
-			slice.setValue( valueUsed );
-			addSlice( slice );
+		if ( valueUsed == valueLimit || valueUsed == 0 || valueUsed > 2 * valueLimit )
+		{
+			diff = true;
 		}
-		else if ( valueUsed == valueLimit || unlimited && valueLimit == 99999 )
+
+		if ( unlimited && valueLimit >= 44640 )
 		{
 			slice = new PieSlice();
 			slice.setColor( Color.parseColor( color ) );
@@ -89,37 +85,26 @@ public class PieGraphWithText extends View
 			addSlice( slice );
 			addSlice( slice );
 		}
-		else if ( valueUsed == 0 )
-		{
-			slice = new PieSlice();
-			if ( unlimited )
-			{
-				slice.setColor( Color.parseColor( color ) );
-			}
-			else
-			{
-				slice.setColor( colorNotUsed );
-			}
-			slice.setValue( 1 ); //fake full circle
-			addSlice( slice );
-			addSlice( slice );
-		}
-		else if ( valueUsed < valueLimit )
+		else if ( unlimited && valueLimit < 44640 || valueUsed < valueLimit )
 		{
 			slice = new PieSlice();
 			slice.setColor( Color.parseColor( color ) );
-			slice.setValue( valueUsed );
-			addSlice( slice );
-
-			slice = new PieSlice();
-			slice.setColor( colorNotUsed );
 			slice.setValue( valueLimit - valueUsed );
 			addSlice( slice );
+			if ( diff )
+			{
+				addSlice( slice );
+			}
+
+			slice = new PieSlice();
+			slice.setColor( colorUsed );
+			slice.setValue( valueUsed );
+			addSlice( slice );
 		}
-		else if ( valueUsed >= 2 * valueLimit )
+		else if ( valueLimit == 0 )
 		{
 			slice = new PieSlice();
-			slice.setColor( Color.parseColor( colorOverrun ) );
+			slice.setColor( colorUsed );
 			slice.setValue( valueUsed );
 			addSlice( slice );
 			addSlice( slice );
@@ -127,22 +112,46 @@ public class PieGraphWithText extends View
 		else if ( valueUsed > valueLimit )
 		{
 			slice = new PieSlice();
-			slice.setColor( Color.parseColor( colorOverrun ) );
-			slice.setValue( valueUsed - valueLimit );
+			if ( diff )
+			{
+				slice.setColor( colorOverused );
+				slice.setValue( valueUsed - valueLimit );
+			}
+			else
+			{
+				slice.setColor( colorUsed );
+				slice.setValue( valueLimit - ( valueUsed - valueLimit ) );
+			}
 			addSlice( slice );
 
 			slice = new PieSlice();
-			slice.setColor( Color.parseColor( color ) );
-			slice.setValue( valueLimit - ( valueUsed - valueLimit ) );
+			slice.setColor( colorOverused );
+			slice.setValue( valueUsed - valueLimit );
 			addSlice( slice );
 		}
 	}
 
 	private void drawText ( Canvas canvas )
 	{
-		String usedLimit = unlimited ? getContext().getResources().getString( R.string.choose_pricing_unlimited ) : valueUsed + "/" + valueLimit;
-		String percentage = String.format( "%.0f%%", Math.floor( ( ( float ) valueUsed / ( float ) valueLimit ) * 100 ) );
-		float textSizeMain = 50f;
+		String minutes;
+		String percentage = null;
+
+		if ( unlimited && valueLimit >= 44640 )
+		{
+			minutes = valueUsed + "";
+			percentage = getContext().getResources().getString( R.string.choose_pricing_unlimited );
+		}
+		else if ( valueLimit == 0 )
+		{
+			minutes = ( valueLimit - valueUsed ) + "/" + valueLimit;
+		}
+		else
+		{
+			minutes = ( valueLimit - valueUsed ) + "/" + valueLimit;
+			percentage = String.format( "%.0f%%", Math.floor( ( ( float ) valueUsed / ( float ) valueLimit ) * 100 ) );
+		}
+
+		float textSizeMain = 40f;
 		int marginPx = 5;
 
 		Paint paint = new Paint();
@@ -151,18 +160,25 @@ public class PieGraphWithText extends View
 		paint.setTextSize( textSizeMain );
 		paint.setTypeface( Typeface.DEFAULT_BOLD );
 
-		float textWidth = paint.measureText( usedLimit );
+		float textWidth = paint.measureText( minutes );
 
-		canvas.drawText( usedLimit, getWidth() / 2 - textWidth / 2, getHeight() / 2 + textSizeMain / 8, paint );
+		//first line
+		canvas.drawText( minutes, getWidth() / 2 - textWidth / 2, getHeight() / 2 + textSizeMain / 8, paint );
 
-		if ( !unlimited )
+		//sencond line
+		paint.setTextSize( textSizeMain * 0.7f );
+		paint.setTypeface( Typeface.DEFAULT );
+		if ( percentage == null )
 		{
-			paint.setTextSize( textSizeMain * 0.7f );
-			paint.setTypeface( Typeface.DEFAULT );
-
-			canvas.drawText( percentage, getWidth() / 2 - paint.measureText( percentage ) - marginPx, getHeight() / 2 + textSizeMain, paint );
-
-			canvas.drawText( text, getWidth() / 2 + marginPx, getHeight() / 2 + textSizeMain, paint );
+			//			textWidth = paint.measureText( text );
+			//			canvas.drawText( text, getWidth() / 2 - textWidth / 2, getHeight() / 2 + textSizeMain, paint );
+		}
+		else
+		{
+			textWidth = paint.measureText( percentage );
+			canvas.drawText( percentage, getWidth() / 2 - textWidth / 2, getHeight() / 2 + textSizeMain, paint );
+			//canvas.drawText( percentage, getWidth() / 2 - paint.measureText( percentage ) - marginPx, getHeight() / 2 + textSizeMain, paint );
+			//canvas.drawText( text, getWidth() / 2 + marginPx, getHeight() / 2 + textSizeMain, paint );
 		}
 	}
 
