@@ -56,10 +56,6 @@ public class PieGraphWithText extends PieGraph
 				percentage = getResources().getString( R.string.chart_unlimited_usage );
 			}
 		}
-		//		else if ( valueLimit == 0 )
-		//		{
-		//			minutes = ( valueLimit - valueUsed ) + "/" + valueLimit;
-		//		}
 		else
 		{
 			int x = ( valueLimit - valueUsed );
@@ -103,8 +99,7 @@ public class PieGraphWithText extends PieGraph
 			}
 		}
 
-		float textSizeMain = 40f;
-		int marginPx = 5;
+		float textSizeMain = getResources().getDimension( R.dimen.graph_text_size );
 
 		Paint paint = new Paint();
 		paint.setColor( Color.parseColor( color ) );
