@@ -44,7 +44,24 @@ public class PieGraphWithText extends PieGraph
 		String minutes;
 		String percentage = null;
 
-		if ( unlimited && valueLimit >= 44640 )
+		float textSizeMain = getResources().getDimension( R.dimen.graph_text_size );
+		float textSizeMinor = textSizeMain * 0.7F;
+
+		if ( !defaultChart )
+		{
+			minutes = valueUsed + "";
+			percentage = defaultText;
+			textSizeMinor = textSizeMinor * 0.7F;
+			if ( text.equals( getResources().getString( R.string.tab_voice ) ) )
+			{
+				minutes += " min";
+			}
+			else if ( text.equals( getResources().getString( R.string.tab_data ) ) )
+			{
+				minutes += " MB";
+			}
+		}
+		else if ( unlimited && valueLimit >= 44640 )
 		{
 			minutes = valueUsed + "";
 			if ( text.equals( getResources().getString( R.string.tab_voice ) ) )
@@ -99,8 +116,6 @@ public class PieGraphWithText extends PieGraph
 			}
 		}
 
-		float textSizeMain = getResources().getDimension( R.dimen.graph_text_size );
-
 		Paint paint = new Paint();
 		paint.setColor( Color.parseColor( color ) );
 		paint.setTextSkewX( -0.2f );
@@ -113,7 +128,7 @@ public class PieGraphWithText extends PieGraph
 		canvas.drawText( minutes, getWidth() / 2 - textWidth / 2, getHeight() / 2 + textSizeMain / 8, paint );
 
 		//sencond line
-		paint.setTextSize( textSizeMain * 0.7f );
+		paint.setTextSize( textSizeMinor );
 		paint.setTypeface( Typeface.DEFAULT );
 		if ( percentage == null )
 		{
