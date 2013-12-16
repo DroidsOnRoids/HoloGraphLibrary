@@ -28,15 +28,20 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.util.AttributeSet;
 
 public class PieGraphWithText extends PieGraph
 {
-	protected String text;
+	protected String text="";
 
 	public PieGraphWithText ( Context context, String text )
 	{
 		super( context );
 		this.text = text;
+	}
+	public PieGraphWithText ( Context context, AttributeSet attrs )
+	{
+		super( context, attrs );
 	}
 
 	private void drawText ( Canvas canvas )
@@ -114,6 +119,7 @@ public class PieGraphWithText extends PieGraph
 					percentage += getResources().getString( R.string.chart_data_remaining );
 				}
 			}
+			percentage+=defaultText;
 		}
 
 		Paint paint = new Paint();
@@ -144,6 +150,7 @@ public class PieGraphWithText extends PieGraph
 		}
 	}
 
+	@Override
 	public void onDraw ( Canvas canvas )
 	{
 		super.onDraw( canvas );
