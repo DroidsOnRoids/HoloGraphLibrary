@@ -32,13 +32,14 @@ import android.util.AttributeSet;
 
 public class PieGraphWithText extends PieGraph
 {
-	protected String text="";
+	protected String text = "";
 
 	public PieGraphWithText ( Context context, String text )
 	{
 		super( context );
 		this.text = text;
 	}
+
 	public PieGraphWithText ( Context context, AttributeSet attrs )
 	{
 		super( context, attrs );
@@ -108,6 +109,17 @@ public class PieGraphWithText extends PieGraph
 					percentage += getResources().getString( R.string.chart_data_remaining );
 				}
 			}
+			else if ( text.equals( getResources().getString( R.string.tab_other ) ) )
+			{
+				if ( valueLimit < valueUsed )
+				{
+					percentage = ( valueUsed - valueLimit ) + " " + getResources().getString( R.string.chart_limit_over ) + defaultText;
+				}
+				else
+				{
+					percentage += getResources().getString( R.string.chart_data_remaining ) + defaultText;
+				}
+			}
 			else
 			{
 				if ( valueLimit < valueUsed )
@@ -119,7 +131,6 @@ public class PieGraphWithText extends PieGraph
 					percentage += getResources().getString( R.string.chart_data_remaining );
 				}
 			}
-			percentage+=defaultText;
 		}
 
 		Paint paint = new Paint();
@@ -148,6 +159,13 @@ public class PieGraphWithText extends PieGraph
 			//canvas.drawText( percentage, getWidth() / 2 - paint.measureText( percentage ) - marginPx, getHeight() / 2 + textSizeMain, paint );
 			//canvas.drawText( text, getWidth() / 2 + marginPx, getHeight() / 2 + textSizeMain, paint );
 		}
+	}
+
+	public void initChart ( int thickness, int valueUsed, int valueLimit, String color, boolean unlimited, boolean defaultChart,
+			String defaultText, String otherTabText )
+	{
+		this.text = otherTabText;
+		initChart( thickness, valueUsed, valueLimit, color, unlimited, defaultChart, defaultText );
 	}
 
 	@Override

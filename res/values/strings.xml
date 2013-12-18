@@ -8,6 +8,7 @@
     <string name="chart_unlimited_usage_voice"/>
     <string name="tab_voice"/>
     <string name="tab_data"/>
+    <string name="tab_other"/>
     <string name="chart_limit_over"/>    
     <string name="chart_limit_over_data"/>
     <string name="chart_limit_over_voice"/>

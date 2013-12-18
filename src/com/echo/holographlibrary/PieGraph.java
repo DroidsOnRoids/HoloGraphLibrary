@@ -49,7 +49,6 @@ public class PieGraph extends View
 	protected int valueUsed;
 	protected int valueLimit;
 	protected String color;
-	protected String colorOverrun;
 	protected final int colorUsed = Color.parseColor( "#d8d8d8" );
 	protected final int colorOverused = Color.parseColor( "#b4b4b4" );
 	protected boolean unlimited;
@@ -144,20 +143,13 @@ public class PieGraph extends View
 		}
 	}
 
-	public void initChart ( int thickness, int valueUsed, int valueLimit, String color, String colorOverrun, boolean unlimited,
-			boolean defaultChart )
-	{
-		initChart( thickness, valueUsed, valueLimit, color, colorOverrun, unlimited, defaultChart, "" );
-	}
-
-	public void initChart ( int thickness, int valueUsed, int valueLimit, String color, String colorOverrun, boolean unlimited,
-			boolean defaultChart, String defaultText )
+	public void initChart ( int thickness, int valueUsed, int valueLimit, String color, boolean unlimited, boolean defaultChart,
+			String defaultText )
 	{
 		this.thickness = thickness;
 		this.valueUsed = valueUsed;
 		this.valueLimit = valueLimit;
 		this.color = color;
-		this.colorOverrun = colorOverrun;
 		this.unlimited = unlimited;
 		this.defaultChart = defaultChart;
 		this.defaultText = defaultText;
