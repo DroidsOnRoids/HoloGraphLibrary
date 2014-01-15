@@ -41,7 +41,7 @@ import android.view.SurfaceView;
 
 public class PieGraphAnimated extends SurfaceView implements SurfaceHolder.Callback
 {
-	private final String TAG = "PieGraph";
+	private static final String TAG = "PieGraph";
 	private SurfaceHolder mHolder;
 
 	private ArrayList< PieSlice > slices = new ArrayList< PieSlice >();
@@ -56,7 +56,7 @@ public class PieGraphAnimated extends SurfaceView implements SurfaceHolder.Callb
 
 	private Handler h;
 
-	private final int FRAME_RATE = 5;
+	private static final int FRAME_RATE = 5;
 
 	public PieGraphAnimated ( Context context )
 	{
@@ -91,6 +91,7 @@ public class PieGraphAnimated extends SurfaceView implements SurfaceHolder.Callb
 		}
 	};
 
+	@Override
 	public void onDraw ( Canvas canvas )
 	{
 		canvas.drawColor( Color.TRANSPARENT );

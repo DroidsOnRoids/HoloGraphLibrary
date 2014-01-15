@@ -23,6 +23,8 @@ package com.echo.holographlibrary;
        under the License.
  */
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -85,7 +87,7 @@ public class PieGraphWithText extends PieGraph
 			minutes = ( x < 0 ? 0 : x ) + "/" + valueLimit;
 			double perc = valueLimit == 0 ? valueLimit : Math.max( 0f,
 					Math.floor( ( ( float ) ( valueLimit - valueUsed ) / ( float ) valueLimit ) * 100 ) );//( float ) ( valueLimit - valueUsed ) / ( float ) valueLimit ) * 100 );
-			percentage = String.format( "%.0f%% ", perc );
+			percentage = String.format( "%.0f%% ", perc, Locale.US );
 
 			if ( text.equals( getResources().getString( R.string.tab_data ) ) )
 			{
