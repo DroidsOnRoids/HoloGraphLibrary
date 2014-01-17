@@ -33,8 +33,7 @@ import android.util.AttributeSet;
 
 public class PieGraphAnimated extends PieGraph
 {
-	private final String TAG = "PieGraphAnimated";
-
+	private static final String TAG = "PieGraphAnimated";
 	private ArrayList< PieSlice > slices = new ArrayList< PieSlice >();
 
 	private int indexSelected = -1;
@@ -45,7 +44,7 @@ public class PieGraphAnimated extends PieGraph
 
 	private Handler h;
 
-	private final int FRAME_RATE = 50;
+	private static final int FRAME_RATE = 50;
 
 	public PieGraphAnimated ( Context context )
 	{
@@ -100,6 +99,7 @@ public class PieGraphAnimated extends PieGraph
 		}
 	};
 
+	@Override
 	public void onDraw ( Canvas canvas )
 	{
 		super.onDraw( canvas );

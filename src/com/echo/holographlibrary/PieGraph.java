@@ -67,6 +67,7 @@ public class PieGraph extends View
 		super( context, attrs );
 	}
 
+	@Override
 	public void onDraw ( Canvas canvas )
 	{
 		canvas.drawColor( Color.TRANSPARENT );

@@ -23,7 +23,6 @@
 
 package com.echo.holographlibrary;
 
-import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Region;
 

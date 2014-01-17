@@ -25,33 +25,26 @@ package com.echo.holographlibrary;
 
 import java.util.ArrayList;
 
-import com.echo.holographlibrary.BarGraph.OnBarClickedListener;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.Path.Direction;
-import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Region;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 
 public class LineGraph extends View {
 	
 	private ArrayList<Line> lines = new ArrayList<Line>();
 	Paint paint = new Paint();
-	private float minY = 0, minX = 0;
+	private float minY = 0;//, minX = 0;
 	private float maxY = 0, maxX = 0;
 	private boolean isMaxYUserSet = false;
 	private int lineToFill = -1;
@@ -68,7 +61,7 @@ public class LineGraph extends View {
 		super(context, attrs);
 	}
 	public void setMinY(float minY){
-		
+		//no-op?
 	}
 	
 	public void removeAllLines(){
@@ -162,6 +155,7 @@ public class LineGraph extends View {
 		return maxX;
 	}
 	
+	@Override
 	public void onDraw(Canvas ca) {
 		if (fullImage == null || shouldUpdate) {
 			fullImage = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
@@ -351,10 +345,10 @@ public class LineGraph extends View {
 	    		
 	    		if (p.getPath() != null && p.getRegion() != null){
 	    			r.setPath(p.getPath(), p.getRegion());
-			    	if (r.contains((int)point.x,(int) point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
+			    	if (r.contains(point.x,point.y) && event.getAction() == MotionEvent.ACTION_DOWN){
 			    		indexSelected = count;
 			    	} else if (event.getAction() == MotionEvent.ACTION_UP){
-			    		if (r.contains((int)point.x,(int) point.y) && listener != null){
+			    		if (r.contains(point.x,point.y) && listener != null){
 			    			listener.onClick(lineCount, pointCount);
 			    		}
 			    		indexSelected = -1;
