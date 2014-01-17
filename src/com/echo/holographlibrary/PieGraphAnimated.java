@@ -103,15 +103,20 @@ public class PieGraphAnimated extends PieGraph
 	public void onDraw ( Canvas canvas )
 	{
 		super.onDraw( canvas );
-		if ( valueUsed != 0 && step < animationSteps )
+		if ( animationStarted && valueUsed != 0 && step < animationSteps )
 		{
 			step += 1;
 			h.postDelayed( r, FRAME_RATE );
+		}
+		else
+		{
+			animationStarted = false;
 		}
 	}
 
 	private int targetUsedValue;
 	private int targetLimitValue;
+	private boolean animationStarted = false;
 
 	@Override
 	public void initChart ( int thickness, int valueUsed, int valueLimit, String color, boolean unlimited, boolean defaultChart,
@@ -122,10 +127,11 @@ public class PieGraphAnimated extends PieGraph
 		this.targetUsedValue = valueUsed;
 	}
 
-	public void invalidateGraph ()
+	public void startAnimation ()
 	{
-		//		step = 0;
-		//		invalidate();
+		step = 0;
+		animationStarted = true;
+		invalidate();
 	}
 
 	public int getAnimationSteps ()
