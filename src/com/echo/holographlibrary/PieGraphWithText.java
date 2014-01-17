@@ -5,6 +5,8 @@ package com.echo.holographlibrary;
  * 	   daniel.nadeau01@gmail.com
  * 	   danielnadeau.blogspot.com
  * 
+ * 		adapted by DroidsOnRoids
+ * 
  * 	   Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements.  See the NOTICE file
        distributed with this work for additional information
@@ -25,7 +27,6 @@ package com.echo.holographlibrary;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -134,7 +135,7 @@ public class PieGraphWithText extends PieGraph
 		}
 
 		Paint paint = new Paint();
-		paint.setColor( Color.parseColor( color ) );
+		paint.setColor( color );
 		paint.setTextSkewX( -0.2f );
 		paint.setTextSize( textSizeMain );
 		paint.setTypeface( Typeface.DEFAULT_BOLD );

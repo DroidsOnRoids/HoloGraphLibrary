@@ -5,6 +5,8 @@ package com.echo.holographlibrary;
  * 	   daniel.nadeau01@gmail.com
  * 	   danielnadeau.blogspot.com
  * 
+ * 		adapted by DroidsOnRoids
+ * 
  * 	   Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements.  See the NOTICE file
        distributed with this work for additional information
@@ -48,7 +50,7 @@ public class PieGraph extends View
 
 	protected int valueUsed;
 	protected int valueLimit;
-	protected String color;
+	protected int color;
 	protected final int colorUsed = Color.parseColor( "#d8d8d8" );
 	protected final int colorOverused = Color.parseColor( "#b4b4b4" );
 	protected boolean unlimited;
@@ -149,7 +151,7 @@ public class PieGraph extends View
 		this.thickness = thickness;
 		this.valueUsed = valueUsed;
 		this.valueLimit = valueLimit;
-		this.color = color;
+		this.color = Color.parseColor( color );
 		this.unlimited = unlimited;
 		this.defaultChart = defaultChart;
 		this.defaultText = defaultText;
@@ -178,7 +180,7 @@ public class PieGraph extends View
 		if ( unlimited && valueLimit >= 44640 )
 		{
 			slice = new PieSlice();
-			slice.setColor( Color.parseColor( color ) );
+			slice.setColor( this.color );
 			slice.setValue( 1 );
 			addSlice( slice );
 			addSlice( slice );
@@ -186,18 +188,20 @@ public class PieGraph extends View
 		else if ( unlimited && valueLimit < 44640 || valueUsed < valueLimit )
 		{
 			slice = new PieSlice();
-			slice.setColor( Color.parseColor( color ) );
+			slice.setColor( this.color );
 			slice.setValue( valueLimit - valueUsed );
 			addSlice( slice );
 			if ( diff )
 			{
 				addSlice( slice );
 			}
-
-			slice = new PieSlice();
-			slice.setColor( colorUsed );
-			slice.setValue( valueUsed );
-			addSlice( slice );
+			else
+			{
+				slice = new PieSlice();
+				slice.setColor( colorUsed );
+				slice.setValue( valueUsed );
+				addSlice( slice );
+			}
 		}
 		else if ( valueLimit == 0 )
 		{

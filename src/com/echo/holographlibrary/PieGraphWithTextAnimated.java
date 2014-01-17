@@ -31,7 +31,7 @@ import android.graphics.Canvas;
 import android.os.Handler;
 import android.util.AttributeSet;
 
-public class PieGraphAnimated extends PieGraph
+public class PieGraphWithTextAnimated extends PieGraphWithText
 {
 	private final String TAG = "PieGraphAnimated";
 
@@ -47,13 +47,13 @@ public class PieGraphAnimated extends PieGraph
 
 	private final int FRAME_RATE = 50;
 
-	public PieGraphAnimated ( Context context )
+	public PieGraphWithTextAnimated ( Context context, String text )
 	{
-		super( context );
+		super( context, text );
 		init();
 	}
 
-	public PieGraphAnimated ( Context context, AttributeSet attrs )
+	public PieGraphWithTextAnimated ( Context context, AttributeSet attrs )
 	{
 		super( context, attrs );
 		init();
