@@ -25,7 +25,6 @@
 
 package com.echo.holographlibrary;
 
-import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Handler;
@@ -33,14 +32,11 @@ import android.util.AttributeSet;
 
 public class PieGraphAnimated extends PieGraph
 {
+	@SuppressWarnings ( "unused" )
 	private static final String TAG = "PieGraphAnimated";
-	private ArrayList< PieSlice > slices = new ArrayList< PieSlice >();
 
-	private int indexSelected = -1;
 	private float animationSteps = 25;
 	private float step = 0;
-	private int thickness = 50;
-	private OnSliceClickedListener listener;
 
 	private Handler h;
 

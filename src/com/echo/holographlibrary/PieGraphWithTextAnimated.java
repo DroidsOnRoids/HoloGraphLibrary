@@ -25,7 +25,6 @@
 
 package com.echo.holographlibrary;
 
-import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Handler;
@@ -33,15 +32,11 @@ import android.util.AttributeSet;
 
 public class PieGraphWithTextAnimated extends PieGraphWithText
 {
-	private final String TAG = "PieGraphAnimated";
+	@SuppressWarnings ( "unused" )
+	private final String TAG = "PieGraphWithTextAnimated";
 
-	private ArrayList< PieSlice > slices = new ArrayList< PieSlice >();
-
-	private int indexSelected = -1;
 	private float animationSteps = 25;
 	private float step = 0;
-	private int thickness = 50;
-	private OnSliceClickedListener listener;
 
 	private Handler h;
 
@@ -103,15 +98,20 @@ public class PieGraphWithTextAnimated extends PieGraphWithText
 	public void onDraw ( Canvas canvas )
 	{
 		super.onDraw( canvas );
-		if ( valueUsed != 0 && step < animationSteps )
+		if ( animationStarted && valueUsed != 0 && step < animationSteps )
 		{
 			step += 1;
 			h.postDelayed( r, FRAME_RATE );
+		}
+		else
+		{
+			animationStarted = false;
 		}
 	}
 
 	private int targetUsedValue;
 	private int targetLimitValue;
+	private boolean animationStarted = false;
 
 	@Override
 	public void initChart ( int thickness, int valueUsed, int valueLimit, String color, boolean unlimited, boolean defaultChart,
@@ -122,10 +122,11 @@ public class PieGraphWithTextAnimated extends PieGraphWithText
 		this.targetUsedValue = valueUsed;
 	}
 
-	public void invalidateGraph ()
+	public void startAnimation ()
 	{
-		//		step = 0;
-		//		invalidate();
+		step = 0;
+		animationStarted = true;
+		invalidate();
 	}
 
 	public int getAnimationSteps ()
