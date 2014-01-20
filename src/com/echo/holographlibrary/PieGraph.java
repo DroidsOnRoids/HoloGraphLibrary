@@ -78,7 +78,7 @@ public class PieGraph extends View
 
 		float currentAngle = 270;
 		float currentSweep = 0;
-		int totalValue = 0;
+		float totalValue = 0;
 		float padding = 0;//2;
 
 		midX = getWidth() / 2;
